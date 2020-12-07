@@ -24,4 +24,16 @@ app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "public/notes.html"));
   });
   
+// Create New Notes - takes in JSON input
+app.post("/api/notes", function(req, res) {
+  let allNotes = JSON.parse(fs.readFileSync("db/db.json"));
+  var newNote = req.body;
+  newNote.id = uuid.v4();
+  allNotes.push(newNote);
+  fs.writeFileSync("db/db.json", JSON.stringify(allNotes))
+  res.json(allNotes);
+  });
+  app.get("/api/notes", function(req, res) {
+    res.sendFile(path.join(__dirname, "db/db.json"));
+});
 
