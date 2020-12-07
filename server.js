@@ -1,3 +1,4 @@
+// all of our dependancies
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
@@ -28,6 +29,7 @@ app.get("/notes", function(req, res) {
 app.post("/api/notes", function(req, res) {
   let allNotes = JSON.parse(fs.readFileSync("db/db.json"));
   var newNote = req.body;
+  // adds random id here
   newNote.id = uuid.v4();
   allNotes.push(newNote);
   fs.writeFileSync("db/db.json", JSON.stringify(allNotes))
@@ -36,4 +38,10 @@ app.post("/api/notes", function(req, res) {
   app.get("/api/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "db/db.json"));
 });
-
+// delete request here
+app.delete("/api/notes/:id", function(req, res) {
+  const allNotes = JSON.parse(fs.readFileSync("db/db.json"));
+  fs.writeFileSync("./db/db.json", JSON.stringify(allNotes.filter((note) => note.id !== req.params.id))
+    );
+    res.json(allNotes)
+  });
